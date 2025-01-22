@@ -35,7 +35,7 @@ export const dateRangeBasedPrescripstion = async (startDate,endDate) => {
     console.error(error);
   }
 };
-const getAllPrescriptions = async () => {
+export const getAllPrescriptions = async () => {
   try{
     const result = await axios.get('http://localhost:8080/api/v1/prescriptions',{
       headers:{

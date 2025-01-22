@@ -1,45 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { dateRangeBasedPrescripstion, monthlyPrescriptions } from '../api/Prescriptions';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
-import { FaPen, FaTrash } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { getAllPrescriptions } from "../api/Prescriptions";
+import { FaPen, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-export const Prescriptions = () => {
+export const AllPrescriptions = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [heading, setHeading] = useState("Current Month Prescriptions");
 
-    // Fetch prescriptions for the selected date range
-    const fetchRangeBasedPrescriptions = async () => {
-        if (!startDate || !endDate) {
-            setError('Please select both start and end date.');
-            return;
-        }
+    const navigate = useNavigate();
 
-        setLoading(true);
-        setError(null);
-        try {
-            const result = await dateRangeBasedPrescripstion(startDate, endDate);
-            setPrescriptions(result.data.data);
-        } catch (err) {
-            setError('Failed to fetch prescriptions for the selected date range.');
-        } finally {
-            setHeading(
-                `Showing Prescriptions from ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`
-            );
-            setLoading(false);
-        }
-    };
-
-    // Fetch monthly prescriptions on component mount
     useEffect(() => {
         const fetchPrescriptions = async () => {
             try {
-                const result = await monthlyPrescriptions();
-                setPrescriptions(result.data.data);
+                const result = await getAllPrescriptions();
+
+                setPrescriptions(result);
             } catch (err) {
                 setError('Failed to fetch prescriptions');
             } finally {
@@ -50,35 +26,17 @@ export const Prescriptions = () => {
         fetchPrescriptions();
     }, []);
 
+    const handleGoBack = () => {
+        navigate("/prescriptions");
+    };
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.heading}>{heading}</h1>
-
-            {/* Date Picker Section */}
-            <div style={styles.datePickerContainer}>
-                <label style={styles.label}>Start Date:</label>
-                <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    dateFormat="yyyy/MM/dd"
-                    placeholderText="Select start date"
-                    style={styles.datePicker}
-                    className="custom-datepicker"
-                />
-
-                <label style={styles.label}>End Date:</label>
-                <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    dateFormat="yyyy/MM/dd"
-                    placeholderText="Select end date"
-                    style={styles.datePicker}
-                    className="custom-datepicker"
-                />
-
-                <button onClick={fetchRangeBasedPrescriptions} style={styles.button}>
-                    Fetch Prescriptions
+            <div style={styles.headerContainer}>
+                <h1 style={styles.heading}>All Prescriptions</h1>
+                {/* Go Back Button */}
+                <button onClick={handleGoBack} style={styles.goBackButton}>
+                    Go Back
                 </button>
             </div>
 
@@ -89,7 +47,7 @@ export const Prescriptions = () => {
                 <p style={styles.error}>{error}</p>
             ) : (
                 <div>
-                    {prescriptions === undefined || prescriptions.length === 0?  (
+                    {prescriptions.length === 0 ? (
                         <p>No prescriptions available for this month.</p>
                     ) : (
                         <table style={styles.table}>
@@ -118,10 +76,10 @@ export const Prescriptions = () => {
                                         <td style={styles.td}>{prescription.diagnosis}</td>
                                         <td style={styles.td}>{prescription.nextDate}</td>
                                         <td style={styles.td}>
-                                            <button  style={styles.editButton}>
+                                            <button style={styles.editButton}>
                                                 <FaPen />
                                             </button>
-                                            <button  style={styles.deleteButton}>
+                                            <button style={styles.deleteButton}>
                                                 <FaTrash />
                                             </button>
                                         </td>
@@ -144,29 +102,16 @@ const styles = {
         padding: "20px",
         fontFamily: "Arial, sans-serif",
     },
+    headerContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px',
+    },
     heading: {
-        textAlign: "center",
         color: "#333",
-        marginBottom: "20px",
     },
-    datePickerContainer: {
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "15px",
-        marginBottom: "20px",
-        flexWrap: "wrap",
-    },
-    datePicker: {
-        padding: "10px",
-        fontSize: "14px",
-        border: "2px solid #ddd",
-        borderRadius: "4px",
-        marginRight: "10px",
-        marginBottom: "10px",
-    },
-    button: {
+    goBackButton: {
         backgroundColor: "#4CAF50",
         color: "white",
         padding: "10px 20px",
@@ -217,4 +162,4 @@ const styles = {
     },
 };
 
-export default Prescriptions;
+export default AllPrescriptions;

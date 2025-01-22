@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/login";
 import Prescriptions from "./pages/Prescriptions";
 import Navbar from "./components/dashboard";
+import AllPrecriptions from "./pages/AllPrecriptions";
 function App() {
   return (
     <Router>
@@ -12,7 +13,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/prescriptions" element = {
           <Navbar>
-          <Prescriptions/>
+            <Prescriptions/>
+          </Navbar>
+          }/>
+          <Route path="/all-prescriptions" element = {
+          <Navbar>
+            <AllPrecriptions/>
           </Navbar>
           }/>
       </Routes>
