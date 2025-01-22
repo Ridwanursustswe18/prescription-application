@@ -27,7 +27,7 @@ public class PrescriptionController {
         this.prescriptionService = prescriptionService;
         this.jwtUtil = jwtUtil;
     }
-
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/create")
     public ResponseEntity<?> createPrescription(
             @RequestBody Prescription prescription,
@@ -80,6 +80,7 @@ public class PrescriptionController {
             );
         }
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePrescription(
             @PathVariable Long id,
@@ -112,6 +113,7 @@ public class PrescriptionController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePrescription(
             @PathVariable Long id,
@@ -143,6 +145,7 @@ public class PrescriptionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting prescription"); // 500 Internal Server Error
         }
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/count-by-date")
     public ResponseEntity<?> getPrescriptionCountByDate(@RequestHeader(value = "Authorization", required = true) String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -165,6 +168,7 @@ public class PrescriptionController {
         }
         return ResponseUtil.createResponse("prescription fetched successfully",HttpStatus.OK,counts);
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity<?>getAllPrescription(@RequestHeader(value = "Authorization", required = true) String authHeader){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -187,6 +191,7 @@ public class PrescriptionController {
         }
         return ResponseUtil.createResponse("all prescriptions fetched successfully",HttpStatus.OK,prescriptions);
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/current-month")
     public ResponseEntity<?>getCurrentMonthPrescriptions(@RequestHeader(value = "Authorization", required = true) String authHeader){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -209,6 +214,7 @@ public class PrescriptionController {
         }
         return ResponseUtil.createResponse("all prescriptions fetched successfully for this month",HttpStatus.OK,prescriptions);
     }
+    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/date-range")
     public ResponseEntity<?> getDateRangeBasedPrescriptions(
             @RequestHeader(value = "Authorization", required = true) String authHeader,

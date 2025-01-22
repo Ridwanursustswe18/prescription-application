@@ -28,10 +28,7 @@ public class JWTUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    /**
-     * Generate a secure signing key using the JWT secret
-     * @return SecretKey for JWT signing
-     */
+
     private SecretKey getSigningKey() {
         if (jwtSecret == null || jwtSecret.trim().isEmpty()) {
             throw new IllegalStateException("JWT secret cannot be null or empty");
@@ -42,11 +39,7 @@ public class JWTUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    /**
-     * Generate JWT token for a given email
-     * @param email user email
-     * @return JWT token string
-     */
+
     public String generateToken(String email) {
         Date now = new Date(System.currentTimeMillis());
         Date expiration = new Date(now.getTime() + EXPIRATION_TIME);
@@ -59,11 +52,7 @@ public class JWTUtil {
                 .compact();
     }
 
-    /**
-     * Validate JWT token with comprehensive checks
-     * @param token JWT token string
-     * @return boolean indicating token validity
-     */
+
     public Boolean validateToken(String token) {
         try {
             // Parse and validate the token with the signing key
@@ -110,11 +99,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Extract email from JWT token
-     * @param token JWT token string
-     * @return email or null if extraction fails
-     */
     public String getEmailFromToken(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
