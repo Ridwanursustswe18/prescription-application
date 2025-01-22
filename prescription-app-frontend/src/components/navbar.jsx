@@ -14,7 +14,7 @@ const Navbar = ({ children }) => {
     <div style={styles.container}>
       {/* Navbar */}
       <div style={styles.navbar}>
-        <h2 style={styles.navbarTitle}>Dashboard</h2>
+        <h2 style={styles.navbarTitle}>Prescription App</h2>
         <div style={styles.navLinks}>
           <a href="/create-prescription" style={styles.navLink}>Create Prescription</a>
           <a href="/all-prescriptions" style={styles.navLink}>All Prescriptions</a>

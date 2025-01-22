@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/login";
 import Prescriptions from "./pages/Prescriptions";
-import Navbar from "./components/dashboard";
+import Navbar from "./components/navbar";
 import AllPrecriptions from "./pages/AllPrecriptions";
+import CreatePrescriptionForm from "./pages/CreatePrescription";
 function App() {
   return (
     <Router>
@@ -19,6 +20,11 @@ function App() {
           <Route path="/all-prescriptions" element = {
           <Navbar>
             <AllPrecriptions/>
+          </Navbar>
+          }/>
+          <Route path="/create-prescription" element = {
+          <Navbar>
+            <CreatePrescriptionForm/>
           </Navbar>
           }/>
       </Routes>
