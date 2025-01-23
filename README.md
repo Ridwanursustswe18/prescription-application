@@ -106,18 +106,27 @@ POST /prescriptions
 **Request Body:**
 ```json
 {
-  "medication": "Drug C",
-  "dosage": "1 tablet daily",
-  "date": "2025-01-12"
+    "prescriptionDate": "2025-01-22",
+    "patientName": "John Doe",
+    "patientAge": 30,
+    "patientGender": "male",
+     "diagnosis": "Flu",
+    "medicine": "Paracetamol",
+    "nextDate": "2025-01-25"
 }
 ```
 
 **Response:**
 ```json
-{
-  "id": 3, "medication": "Drug C", "date": "2025-01-12"
-}
-```
+{    "id":1
+    "prescriptionDate": "2025-01-22",
+    "patientName": "John Doe",
+    "patientAge": 30,
+    "patientGender": "male",
+     "diagnosis": "Flu",
+    "medicine": "Paracetamol",
+    "nextDate": "2025-01-25"
+}```
 
 **Error Cases:**
 - `400 Bad Request`: Invalid input data.
@@ -132,15 +141,22 @@ PUT /prescriptions/{id}
 **Request Body:**
 ```json
 {
-  "medication": "Updated Drug",
-  "dosage": "2 tablets daily"
+    "diagnosis": "Cough",
+    "medicine": "Napa"
 }
 ```
 
 **Response:**
 ```json
 {
-  "id": 3, "medication": "Updated Drug" 
+  "id":1
+    "prescriptionDate": "2025-01-22",
+    "patientName": "John Doe",
+    "patientAge": 30,
+    "patientGender": "male",
+     "diagnosis": "Cough",
+    "medicine": "Napa",
+    "nextDate": "2025-01-25" 
 }
 ```
 
@@ -175,13 +191,51 @@ GET /prescriptions
 **Response:**
 ```json
 [
-  { "id": 1, "medication": "Drug A", "date": "2025-01-10" },
-  { "id": 2, "medication": "Drug B", "date": "2025-01-05" }
+  {
+  "id":1
+    "prescriptionDate": "2025-01-22",
+    "patientName": "John Doe",
+    "patientAge": 30,
+    "patientGender": "male",
+     "diagnosis": "Flu",
+    "medicine": "Napa",
+    "nextDate": "2025-01-25" 
+}
+
+  {
+  "id":2
+    "prescriptionDate": "2025-01-22",
+    "patientName": "John Doe",
+    "patientAge": 30,
+    "patientGender": "male",
+     "diagnosis": "Cough",
+    "medicine": "Napa",
+    "nextDate": "2025-01-25" 
+}
 ]
 ```
 
 **Error Cases:**
 - `403 Forbidden`: Missing or invalid JWT token.
+### 6. Daliy Reort of prescription counts
+**Endpoint:**
+```
+GET /prescriptions/count-by-date
+```
+
+**Response:**
+```json
+[
+ {   "2025-01-10":3 },
+  {  "2025-01-05":5 }
+]
+```
+
+**Error Cases:**
+- `403 Forbidden`: Missing or invalid JWT token.
+### 6. Daliy Reort of prescription counts
+**Endpoint:**
+```
 
 ## Example Usage in Spring Java
 ```java
