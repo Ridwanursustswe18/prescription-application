@@ -233,9 +233,7 @@ GET /prescriptions/count-by-date
 
 **Error Cases:**
 - `403 Forbidden`: Missing or invalid JWT token.
-### 6. Daliy Reort of prescription counts
-**Endpoint:**
-```
+
 
 ## Example Usage in Spring Java
 ```java
