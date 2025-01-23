@@ -27,14 +27,14 @@ The Prescription Management API provides secure access to prescription records. 
 
 ### Base URL
 ```
-https://api.example.com/v1
+http://localhost:8080/api/v1
 ```
 
 ## Authentication
 ### User Login
 **Endpoint:**
 ```
-POST /auth/login
+POST /login
 ```
 
 **Request Body:**
