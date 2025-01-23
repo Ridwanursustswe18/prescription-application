@@ -135,7 +135,7 @@ POST /prescriptions
 ### 4. Edit a Prescription
 **Endpoint:**
 ```
-PUT /prescriptions/{id}
+PATCH /prescriptions/{id}
 ```
 
 **Request Body:**
@@ -164,7 +164,7 @@ PUT /prescriptions/{id}
 - `400 Bad Request`: Invalid input data.
 - `403 Forbidden`: Missing or invalid JWT token.
 - `404 Not Found`: Prescription not found.
-
+```
 ### 5. Delete a Prescription
 **Endpoint:**
 ```
