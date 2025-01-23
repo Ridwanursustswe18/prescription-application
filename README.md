@@ -267,5 +267,4 @@ public class PrescriptionClient {
 }
 ```
 
-For support, contact `support@example.com`.
 
