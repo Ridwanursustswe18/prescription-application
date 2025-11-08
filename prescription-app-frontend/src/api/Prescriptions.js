@@ -89,3 +89,16 @@ export const updatePrescription = async (id, prescriptionData) => {
     throw error;
   }
 };
+export const deletePrescription = async (id) => {
+  try {
+    const response = await axios.delete(`http://localhost:8080/api/v1/prescriptions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting prescription:", error);
+    throw error;
+  }
+};

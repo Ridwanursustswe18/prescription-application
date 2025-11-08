@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { getAllPrescriptions } from "../api/Prescriptions";
+import { deletePrescription, getAllPrescriptions } from "../api/Prescriptions";
 import { FaPen, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import DeleteModal from "../global/modals/DeleteModal";
 
 export const AllPrescriptions = () => {
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [showModal, setShowModal] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
     const navigate = useNavigate();
-
+    
     useEffect(() => {
         const fetchPrescriptions = async () => {
             try {
@@ -32,6 +34,19 @@ export const AllPrescriptions = () => {
     const handleEdit = (id) => {
      navigate(`/edit-prescription/${id}`);
     }
+    const handleDeleteClick = (id) => {
+        setSelectedId(id);
+        setShowModal(true);
+    };
+    const confirmDelete = async () => {
+        await deletePrescription(selectedId);
+        setPrescriptions(prescriptions.filter(prescription => prescription.id !== selectedId));
+        setShowModal(false);
+        
+    }
+    const cancelDelete = () => {
+    setShowModal(false);
+  };
     return (
         <div style={styles.container}>
             <div style={styles.headerContainer}>
@@ -50,7 +65,7 @@ export const AllPrescriptions = () => {
             ) : (
                 <div>
                     {prescriptions.length === 0 ? (
-                        <p>No prescriptions available for this month.</p>
+                        <p>No prescriptions available.</p>
                     ) : (
                         <table style={styles.table}>
                             <thead>
@@ -78,10 +93,10 @@ export const AllPrescriptions = () => {
                                         <td style={styles.td}>{prescription.diagnosis}</td>
                                         <td style={styles.td}>{prescription.nextDate}</td>
                                         <td style={styles.td}>
-                                            <button style={styles.editButton} onClick={() => handleEdit(prescription.id)}>
+                                            <button style={styles.editButton} onClick={() => handleEdit(prescription?.id)}>
                                                 <FaPen />
                                             </button>
-                                            <button style={styles.deleteButton}>
+                                            <button style={styles.deleteButton} onClick={() =>handleDeleteClick(prescription?.id)}>
                                                 <FaTrash />
                                             </button>
                                         </td>
@@ -92,6 +107,7 @@ export const AllPrescriptions = () => {
                     )}
                 </div>
             )}
+            <DeleteModal isOpen={showModal} onClose={cancelDelete} onConfirm={confirmDelete} />
         </div>
     );
 };
