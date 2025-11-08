@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -27,30 +28,14 @@ public class PrescriptionController {
         this.prescriptionService = prescriptionService;
         this.jwtUtil = jwtUtil;
     }
-    @CrossOrigin(origins = "http://localhost:5173")
+
     @PostMapping("/create")
     public ResponseEntity<?> createPrescription(
             @RequestBody Prescription prescription,
             @RequestHeader(value = "Authorization", required = true) String authHeader) {
 
         try {
-            // Extract token
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-            }
-
-            String token = authHeader.substring(7);
-
-            // Validate token
-            String email = jwtUtil.getEmailFromToken(token);
-
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-            }
-
-            if (email == null ) {
-                return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-            }
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             // Create prescription
             Prescription newPrescription = prescriptionService.createPrescription(prescription);
@@ -80,27 +65,11 @@ public class PrescriptionController {
             );
         }
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/{id}")
     public ResponseEntity<?> getPrescriptionById(
             @PathVariable Long id,
             @RequestHeader(value = "Authorization", required = true) String authHeader) {
-
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-        }
-
-        String token = authHeader.substring(7);
-
-        String email = jwtUtil.getEmailFromToken(token);
-
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-        }
-        if (email == null) {
-            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-        }
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
             Prescription prescription = prescriptionService.getPrescriptionById(id);
             return ResponseUtil.createResponse("Prescription fetched successfully", HttpStatus.OK, prescription);
@@ -109,7 +78,6 @@ public class PrescriptionController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePrescription(
             @PathVariable Long id,
@@ -117,22 +85,7 @@ public class PrescriptionController {
             @RequestHeader(value = "Authorization", required = true) String authHeader) {
 
         try {
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-            }
-
-            String token = authHeader.substring(7);
-
-            String email = jwtUtil.getEmailFromToken(token);
-
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-            }
-            if (email == null) {
-                return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-            }
-
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             Prescription updated = prescriptionService.updatePrescription(id, updatedFields);
             return ResponseUtil.createResponse("Prescription updated successfully",
                     HttpStatus.OK,
@@ -142,26 +95,11 @@ public class PrescriptionController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePrescription(
             @PathVariable Long id,
             @RequestHeader(value = "Authorization", required = true) String authHeader) {
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-        }
-
-        String token = authHeader.substring(7);
-
-        String email = jwtUtil.getEmailFromToken(token);
-
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-        }
-        if (email == null) {
-            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-        }
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
             prescriptionService.deletePrescription(id);
@@ -174,30 +112,15 @@ public class PrescriptionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting prescription"); // 500 Internal Server Error
         }
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/count-by-date")
     public ResponseEntity<?> getPrescriptionCountByDate(@RequestHeader(value = "Authorization", required = true) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-        }
-
-        String token = authHeader.substring(7);
-
-        String email = jwtUtil.getEmailFromToken(token);
-
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-        }
-        if (email == null) {
-            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-        }
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Map<LocalDate, Long> counts = prescriptionService.countPrescriptionsByDate();
         if(counts.isEmpty()){
             return ResponseUtil.createResponse("No prescriptions found",HttpStatus.OK);
         }
         return ResponseUtil.createResponse("prescription fetched successfully",HttpStatus.OK,counts);
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping
     public ResponseEntity<?>getAllPrescription(@RequestHeader(value = "Authorization", required = true) String authHeader){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -220,51 +143,22 @@ public class PrescriptionController {
         }
         return ResponseUtil.createResponse("all prescriptions fetched successfully",HttpStatus.OK,prescriptions);
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/current-month")
     public ResponseEntity<?>getCurrentMonthPrescriptions(@RequestHeader(value = "Authorization", required = true) String authHeader){
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-        }
-
-        String token = authHeader.substring(7);
-
-        String email = jwtUtil.getEmailFromToken(token);
-
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-        }
-        if (email == null) {
-            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-        }
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Prescription> prescriptions = prescriptionService.getCurrentMonthPrescriptions();
         if(prescriptions.isEmpty()){
             return ResponseUtil.createResponse("No prescriptions found",HttpStatus.OK);
         }
         return ResponseUtil.createResponse("all prescriptions fetched successfully for this month",HttpStatus.OK,prescriptions);
     }
-    @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/date-range")
     public ResponseEntity<?> getDateRangeBasedPrescriptions(
             @RequestHeader(value = "Authorization", required = true) String authHeader,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
-        }
-
-        String token = authHeader.substring(7);
-
-        String email = jwtUtil.getEmailFromToken(token);
-
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
-        }
-        if (email == null) {
-            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
-        }
-
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Prescription> prescriptions = prescriptionService.getDateRangeBasedPrescriptions(startDate, endDate);
         if (prescriptions.isEmpty()) {
             return ResponseUtil.createResponse("No prescriptions found", HttpStatus.OK);
