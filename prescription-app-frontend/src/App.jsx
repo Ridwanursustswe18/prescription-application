@@ -4,6 +4,7 @@ import Prescriptions from "./pages/Prescriptions";
 import Navbar from "./components/navbar";
 import AllPrecriptions from "./pages/AllPrecriptions";
 import CreatePrescriptionForm from "./pages/CreatePrescription";
+import PrescriptionReport from "./pages/PrescriptionReport";
 function App() {
   return (
     <Router>
@@ -29,6 +30,11 @@ function App() {
           }/>
           <Route path="/edit-prescription/:id" element = {
             <CreatePrescriptionForm/>
+          }/>
+          <Route path="/report" element = {
+          <Navbar>
+            <PrescriptionReport/>
+          </Navbar>
           }/>
       </Routes>
     </Router>

@@ -64,7 +64,7 @@ export const AllPrescriptions = () => {
                 <p style={styles.error}>{error}</p>
             ) : (
                 <div>
-                    {prescriptions.length === 0 ? (
+                    {prescriptions?.length === 0 ? (
                         <p>No prescriptions available.</p>
                     ) : (
                         <table style={styles.table}>

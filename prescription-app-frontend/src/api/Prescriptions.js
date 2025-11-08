@@ -102,3 +102,17 @@ export const deletePrescription = async (id) => {
     throw error;
   }
 };
+export const getDaywisePrescriptionCount = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/v1/prescriptions/count-by-date', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching day-wise prescription count:", error);
+    throw error;
+  }
+};
