@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { createPrescription } from "../api/Prescriptions";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { createPrescription, getPrescriptionById, updatePrescription } from "../api/Prescriptions";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CreatePrescriptionForm = () => {
     const [formData, setFormData] = useState({
@@ -16,54 +16,67 @@ const CreatePrescriptionForm = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const navigate = useNavigate();
+    const { id } = useParams();
+   
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
+    const fetchPrescription = async () => {
+        if (id) {
+            const prescription = await getPrescriptionById(id);
+            setFormData(prescription);
+        }
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setError(null);
             setSuccess(null);
-
-            const response = await createPrescription(formData);
-            setSuccess("Prescription created successfully!");
+            if (id) {
+                 await updatePrescription(id, formData);
+            
+                } else {
+                const response = await createPrescription(formData);
+            }
+            setSuccess(`Prescription ${id ? "updated" : "created"} successfully!`);
             navigate('/prescriptions');
         } catch (err) {
-            setError("Failed to create prescription.");
+            setError(`Failed to ${id ? "update" : "create"} prescription.`);
         }
     };
-
+    useEffect(() => {
+        fetchPrescription();
+    }, [id]);
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>Create Prescription</h2>
+            <h2 style={styles.heading}>{id ? "Edit" : "Create"} Prescription</h2>
             {error && <p style={styles.errorMessage}>{error}</p>}
             {success && <p style={styles.successMessage}>{success}</p>}
             
             <form onSubmit={handleSubmit} style={styles.form}>
                 <div style={styles.formGroup}>
                     <label>Medicine Name</label>
-                    <input type="text" name="medicine" onChange={handleChange} required style={styles.input} />
+                    <input type="text" name="medicine" onChange={handleChange} required style={styles.input} value={formData.medicine}/>
                 </div>
 
                 <div style={styles.formGroup}>
                     <label>Prescription Date</label>
-                    <input type="date" name="prescriptionDate" onChange={handleChange} required style={styles.input} />
+                    <input type="date" name="prescriptionDate" onChange={handleChange} required style={styles.input} value={formData.prescriptionDate}/>
                 </div>
 
                 <div style={styles.formGroup}>
                     <label>Patient Name</label>
-                    <input type="text" name="patientName" onChange={handleChange} required style={styles.input} />
+                    <input type="text" name="patientName" onChange={handleChange} required style={styles.input} value={formData.patientName}/>
                 </div>
 
                 <div style={styles.formGroup}>
                     <label>Age</label>
-                    <input type="number" name="patientAge" onChange={handleChange} required style={styles.input} />
+                    <input type="number" name="patientAge" onChange={handleChange} required style={styles.input} value={formData.patientAge}/>
                 </div>
 
                 <div style={styles.formGroup}>
                     <label>Gender</label>
-                    <select name="patientGender" onChange={handleChange} required style={styles.input}>
+                    <select name="patientGender" onChange={handleChange} required style={styles.input} value={formData.patientGender}>
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -72,15 +85,15 @@ const CreatePrescriptionForm = () => {
 
                 <div style={styles.formGroup}>
                     <label>Diagnosis</label>
-                    <input type="text" name="diagnosis" onChange={handleChange}  style={styles.input} />
+                    <input type="text" name="diagnosis" onChange={handleChange}  style={styles.input} value={formData.diagnosis}/>
                 </div>
 
                 <div style={styles.formGroup}>
                     <label>Next Appointment Date</label>
-                    <input type="date" name="nextDate" onChange={handleChange}  style={styles.input} />
+                    <input type="date" name="nextDate" onChange={handleChange}  style={styles.input} value={formData.nextDate}/>
                 </div>
 
-                <button type="submit" style={styles.button}>Create Prescription</button>
+                <button type="submit" style={styles.button}> {id ? "Update" : "Create"} Prescription</button>
             </form>
         </div>
     );

@@ -3,10 +3,13 @@ package com.example.demo.user;
 import com.example.demo.user.utils.JWTUtil;
 import com.example.demo.user.utils.PasswordEncoderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
@@ -34,5 +37,11 @@ public class UserService {
         System.out.println(jwtUtil);
 
         return jwtUtil.generateToken(fetchUser.getEmail());
+    }
+
+
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
 }

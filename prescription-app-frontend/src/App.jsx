@@ -27,6 +27,9 @@ function App() {
             <CreatePrescriptionForm/>
           </Navbar>
           }/>
+          <Route path="/edit-prescription/:id" element = {
+            <CreatePrescriptionForm/>
+          }/>
       </Routes>
     </Router>
   );

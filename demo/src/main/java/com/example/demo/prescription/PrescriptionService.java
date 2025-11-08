@@ -23,6 +23,10 @@ public class PrescriptionService {
         prescriptionRepository.save(prescription);
         return prescription;
     }
+    public Prescription getPrescriptionById(Long id) {
+        return prescriptionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Prescription not found with id: " + id));
+    }
     public Prescription updatePrescription(Long id, Prescription updatedFields) {
         Optional<Prescription> existingPrescription = prescriptionRepository.findById(id);
         if (existingPrescription.isPresent()) {

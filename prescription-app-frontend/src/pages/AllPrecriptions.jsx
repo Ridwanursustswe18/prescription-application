@@ -29,7 +29,9 @@ export const AllPrescriptions = () => {
     const handleGoBack = () => {
         navigate("/prescriptions");
     };
-
+    const handleEdit = (id) => {
+     navigate(`/edit-prescription/${id}`);
+    }
     return (
         <div style={styles.container}>
             <div style={styles.headerContainer}>
@@ -76,7 +78,7 @@ export const AllPrescriptions = () => {
                                         <td style={styles.td}>{prescription.diagnosis}</td>
                                         <td style={styles.td}>{prescription.nextDate}</td>
                                         <td style={styles.td}>
-                                            <button style={styles.editButton}>
+                                            <button style={styles.editButton} onClick={() => handleEdit(prescription.id)}>
                                                 <FaPen />
                                             </button>
                                             <button style={styles.deleteButton}>

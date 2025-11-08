@@ -15,4 +15,5 @@ public interface PrescriptionRepository extends JpaRepository<Prescription,Long>
     List<Prescription> findPrescriptionsForCurrentMonth();
     @Query("SELECT p.prescriptionDate, COUNT(p) FROM Prescription p GROUP BY p.prescriptionDate")
     List<Object[]> countPrescriptionsByDate();
+
 }

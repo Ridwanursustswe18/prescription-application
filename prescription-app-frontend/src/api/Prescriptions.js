@@ -61,4 +61,31 @@ export const createPrescription = async (prescriptionData) => {
     console.error("Error creating prescription:", error);
     throw error;
   }
-}; 
+};
+export const getPrescriptionById = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/v1/prescriptions/${id}`, { 
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching prescription by ID:", error);
+    throw error;
+  }
+};
+export const updatePrescription = async (id, prescriptionData) => {
+  try {
+    const response = await axios.patch(`http://localhost:8080/api/v1/prescriptions/${id}`, prescriptionData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error updating prescription:", error);
+    throw error;
+  }
+};

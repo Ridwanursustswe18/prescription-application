@@ -81,6 +81,35 @@ public class PrescriptionController {
         }
     }
     @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPrescriptionById(
+            @PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = true) String authHeader) {
+
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseUtil.createResponse("Invalid Credentials", HttpStatus.FORBIDDEN);
+        }
+
+        String token = authHeader.substring(7);
+
+        String email = jwtUtil.getEmailFromToken(token);
+
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseUtil.createResponse("Token expired or invalid", HttpStatus.FORBIDDEN);
+        }
+        if (email == null) {
+            return ResponseUtil.createResponse("Invalid user", HttpStatus.FORBIDDEN);
+        }
+        try {
+            Prescription prescription = prescriptionService.getPrescriptionById(id);
+            return ResponseUtil.createResponse("Prescription fetched successfully", HttpStatus.OK, prescription);
+        } catch (IllegalArgumentException e) {
+            return ResponseUtil.createResponse(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePrescription(
             @PathVariable Long id,
