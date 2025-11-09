@@ -87,6 +87,9 @@ public class PrescriptionService {
         return prescriptionRepository.findPrescriptionsForCurrentMonth();
     }
     public List<Prescription> getDateRangeBasedPrescriptions(LocalDate startDate,LocalDate endDate){
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date cannot be after end date.");
+        }
         List<Prescription> prescriptions = prescriptionRepository.findPrescriptionsBetweenDates(startDate, endDate);
         return prescriptions;
     }
