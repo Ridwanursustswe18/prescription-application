@@ -22,7 +22,10 @@ export const Prescriptions = () => {
             setError('Please select both start and end date.');
             return;
         }
-
+        if(startDate > endDate){
+            setError('Start date cannot be later than end date.');
+            return;
+        }
         setLoading(true);
         setError(null);
         try {
