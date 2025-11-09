@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { dateRangeBasedPrescripstion, monthlyPrescriptions } from '../api/Prescriptions';
+import { dateRangeBasedPrescripstion, deletePrescription, monthlyPrescriptions } from '../api/Prescriptions';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { FaPen, FaTrash } from 'react-icons/fa';
+import DeleteModal from '../global/modals/DeleteModal';
+import { useNavigate } from 'react-router-dom';
 
 export const Prescriptions = () => {
     const [prescriptions, setPrescriptions] = useState([]);
@@ -11,7 +13,9 @@ export const Prescriptions = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [heading, setHeading] = useState("Current Month Prescriptions");
-
+     const [showModal, setShowModal] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
+    const navigate = useNavigate();
     // Fetch prescriptions for the selected date range
     const fetchRangeBasedPrescriptions = async () => {
         if (!startDate || !endDate) {
@@ -49,7 +53,22 @@ export const Prescriptions = () => {
 
         fetchPrescriptions();
     }, []);
-
+     const handleEdit = (id) => {
+         navigate(`/edit-prescription/${id}`);
+        }
+        const handleDeleteClick = (id) => {
+            setSelectedId(id);
+            setShowModal(true);
+        };
+        const confirmDelete = async () => {
+            await deletePrescription(selectedId);
+            setPrescriptions(prescriptions.filter(prescription => prescription.id !== selectedId));
+            setShowModal(false);
+            
+        }
+        const cancelDelete = () => {
+        setShowModal(false);
+      };
 
     return (
         <div style={styles.container}>
@@ -118,10 +137,10 @@ export const Prescriptions = () => {
                                         <td style={styles.td}>{prescription.diagnosis}</td>
                                         <td style={styles.td}>{prescription.nextDate}</td>
                                         <td style={styles.td}>
-                                            <button  style={styles.editButton}>
+                                            <button  style={styles.editButton} onClick={()=>handleEdit(prescription?.id)}>
                                                 <FaPen />
                                             </button>
-                                            <button  style={styles.deleteButton}>
+                                            <button  style={styles.deleteButton} onClick={()=>handleDeleteClick(prescription?.id)}>
                                                 <FaTrash />
                                             </button>
                                         </td>
@@ -132,6 +151,7 @@ export const Prescriptions = () => {
                     )}
                 </div>
             )}
+            <DeleteModal isOpen={showModal} onClose={cancelDelete} onConfirm={confirmDelete} />
         </div>
     );
 };
