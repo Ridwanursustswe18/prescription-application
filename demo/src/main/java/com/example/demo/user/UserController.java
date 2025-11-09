@@ -1,22 +1,26 @@
 package com.example.demo.user;
 
 import com.example.demo.response.ResponseUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
+@Tag(name = "User APIs",description = "Endpoints for managing users such as registration,login")
 @RestController
 @RequestMapping("api/v1/users")
-@CrossOrigin(origins = "*") // Add if you need CORS support
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @PostMapping("/create")
+    @Operation(
+            summary = "Creates a new User"
+    )
+    @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             User createdUser = userService.createUser(user);
@@ -38,7 +42,7 @@ public class UserController {
             );
         }
     }
-
+    @Operation(summary = "login of a user",description = "User will be logged in and will be returned with a JWT token")
     @PostMapping("/login")
     public ResponseEntity<?> userLogin(@RequestBody User user) {
         try {

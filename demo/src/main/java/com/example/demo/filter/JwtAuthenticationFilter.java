@@ -30,8 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // Skip public endpoints
-        if (path.startsWith("/api/v1/users") || path.startsWith("/login") || path.startsWith("/register") || path.startsWith("/refresh_token")) {
-            filterChain.doFilter(request, response);
+        if (path.startsWith("/api/v1/users") ||
+                path.startsWith("/login") ||
+                path.startsWith("/register") ||
+                path.startsWith("/refresh_token") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui") ||
+                path.equals("/swagger-ui.html")) {
+
+            filterChain.doFilter(request, response); // Skip JWT check
             return;
         }
         String authHeader = request.getHeader("Authorization");
